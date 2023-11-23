@@ -1,4 +1,6 @@
 package com.backend.clinicaodontologica.dto.entrada.turno;
+import com.backend.clinicaodontologica.entity.Odontologo;
+import com.backend.clinicaodontologica.entity.Paciente;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
@@ -12,44 +14,35 @@ public class TurnoEntradaDto {
     private LocalDateTime fechaYHora;
 
     @NotNull(message = "El ID del odontologo no puede ser nulo")
-    private Long idOdontologo;
+    private Odontologo odontologo;
 
 
     @NotNull(message = "El ID del paciente no puede ser nulo")
-    private Long idPaciente;
-
+    private Paciente paciente;
 
 
     public TurnoEntradaDto() {
     }
 
-    public TurnoEntradaDto(Long idPaciente, Long idOdontologo, LocalDateTime fechaYHora) {
-        this.idPaciente = idPaciente;
-        this.idOdontologo = idOdontologo;
+    public TurnoEntradaDto(LocalDateTime fechaYHora, Odontologo odontologo, Paciente paciente) {
         this.fechaYHora = fechaYHora;
+        this.odontologo = odontologo;
+        this.paciente = paciente;
     }
 
-    public Long getIdPaciente() {
-        return idPaciente;
+    public Odontologo getOdontologo() {
+        return odontologo;
     }
 
-    public void setIdPaciente(Long idPaciente) {
-        this.idPaciente = idPaciente;
+    public void setOdontologo(Odontologo odontologo) {
+        this.odontologo = odontologo;
     }
 
-    public Long getIdOdontologo() {
-        return idOdontologo;
+    public Paciente getPaciente() {
+        return paciente;
     }
 
-    public void setIdOdontologo(Long idOdontologo) {
-        this.idOdontologo = idOdontologo;
-    }
-
-    public LocalDateTime getFechaYHora() {
-        return fechaYHora;
-    }
-
-    public void setFechaYHora(LocalDateTime fechaYHora) {
-        this.fechaYHora = fechaYHora;
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
     }
 }

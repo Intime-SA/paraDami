@@ -52,7 +52,10 @@ public class OdontologoService implements IOdontologoService {
 
     @Override
     public OdontologoSalidaDto buscarOdontologoPorId(Long id) {
-        return null;
+        OdontologoSalidaDto odontologo = null;
+        Odontologo odontologoEntidad = odontologoRepository.getReferenceById(id);
+        odontologo = modelMapper.map(odontologoEntidad, OdontologoSalidaDto.class);
+        return odontologo;
     }
 
     @Override

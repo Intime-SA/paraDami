@@ -1,6 +1,6 @@
 package com.backend.clinicaodontologica.controller;
 import com.backend.clinicaodontologica.dto.entrada.turno.TurnoEntradaDto;
-import com.backend.clinicaodontologica.dto.entrada.turno.TurnoSalidaDto;
+import com.backend.clinicaodontologica.dto.salida.turno.TurnoSalidaDto;
 import com.backend.clinicaodontologica.service.ITurnoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

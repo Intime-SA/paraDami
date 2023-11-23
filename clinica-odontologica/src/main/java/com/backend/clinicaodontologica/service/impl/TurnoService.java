@@ -1,7 +1,10 @@
 package com.backend.clinicaodontologica.service.impl;
 
+import com.backend.clinicaodontologica.dto.entrada.paciente.PacienteEntradaDto;
 import com.backend.clinicaodontologica.dto.entrada.turno.TurnoEntradaDto;
-import com.backend.clinicaodontologica.dto.entrada.turno.TurnoSalidaDto;
+import com.backend.clinicaodontologica.dto.salida.turno.TurnoSalidaDto;
+import com.backend.clinicaodontologica.dto.modificacion.PacienteModificacionEntradaDto;
+import com.backend.clinicaodontologica.dto.salida.odontologo.OdontologoSalidaDto;
 import com.backend.clinicaodontologica.dto.salida.paciente.PacienteSalidaDto;
 import com.backend.clinicaodontologica.entity.Odontologo;
 import com.backend.clinicaodontologica.entity.Paciente;
@@ -14,6 +17,7 @@ import com.backend.clinicaodontologica.utils.JsonPrinter;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,45 +26,54 @@ import java.util.List;
 public class TurnoService implements ITurnoService {
     private final Logger LOGGER = LoggerFactory.getLogger(TurnoService.class);
     private TurnoRepository turnoRepository;
-    private ModelMapper modelMapper;
-    private PacienteRepository pacienteRepository;
-    private OdontologoRepository odontologoRepository;
 
-    public TurnoService(TurnoRepository turnoRepository, ModelMapper modelMapper, PacienteRepository pacienteRepository, OdontologoRepository odontologoRepository) {
+    private PacienteService pacienteService;
+    private OdontologoService odontologoService;
+    private ModelMapper modelMapper;
+
+
+    @Autowired
+    public TurnoService(TurnoRepository turnoRepository, ModelMapper modelMapper, PacienteService pacienteService, OdontologoService odontologoService) {
         this.turnoRepository = turnoRepository;
+        this.pacienteService = pacienteService;
+        this.odontologoService = odontologoService;
         this.modelMapper = modelMapper;
-        this.pacienteRepository = pacienteRepository;
-        this.odontologoRepository = odontologoRepository;
+        configureMapping();
     }
+
 
     @Override
     public TurnoSalidaDto crearTurno(TurnoEntradaDto turnoEntradaDto) {
+
         TurnoSalidaDto turnoSalidaDto = null;
+
         try {
             LOGGER.info("TurnoEntradaDTO: " + JsonPrinter.toString(turnoEntradaDto));
-            Long idPaciente = turnoEntradaDto.getIdPaciente();
-            Long idOdontologo = turnoEntradaDto.getIdOdontologo();
+            Long idPaciente = turnoEntradaDto.getPaciente().getId();
+            Long idOdontologo = turnoEntradaDto.getOdontologo().getId();
 
             // Cargar Paciente y Odontologo utilizando sus identificadores
 
-            Paciente pacienteEncontrado = pacienteRepository.findById(idPaciente).orElse(null);
-            LOGGER.info("Paciente encontrado por ID: " + idPaciente);
+            PacienteSalidaDto pacienteEncontrado = pacienteService.buscarPacientePorId(idPaciente);
+            LOGGER.info("Paciente encontrado por ID: " + pacienteEncontrado);
 
-            Odontologo odontologoEncontrado = odontologoRepository.findById(idOdontologo).orElse(null);
-            LOGGER.info("Odontologo encontrado por ID: " + idOdontologo);
+            OdontologoSalidaDto odontologoEncontrado = odontologoService.buscarOdontologoPorId(idOdontologo);
+            LOGGER.info("Odontologo encontrado por ID: " + odontologoEncontrado);
 
-            if (pacienteEncontrado != null && odontologoEncontrado != null && turnoEntradaDto.getFechaYHora() != null) {
-                Paciente pacienteEntidad = modelMapper.map(pacienteEncontrado, Paciente.class);
-                Odontologo odontologoEntidad = modelMapper.map(odontologoEncontrado, Odontologo.class);
-                LOGGER.info("Paciente: " + pacienteEntidad);
-                LOGGER.info("Odontologo: " + odontologoEntidad);
 
-                Turno turnoNuevo = new Turno(turnoEntradaDto.getFechaYHora(), odontologoEntidad, pacienteEntidad);
-                Turno turnoPersistencia = turnoRepository.save(turnoNuevo);
-                LOGGER.info("turno nuevo: " + turnoNuevo);
+            if (pacienteEncontrado != null && odontologoEncontrado != null) {
+                Turno turnoEntidad = modelMapper.map(turnoEntradaDto, Turno.class);
+                Turno turnoPersistencia = turnoRepository.save(turnoEntidad);
+                turnoSalidaDto = modelMapper.map(turnoPersistencia, TurnoSalidaDto.class);
+                LOGGER.info("PacienteSalidaDto: " + JsonPrinter.toString(turnoSalidaDto));
 
-                turnoSalidaDto = modelMapper.map(turnoNuevo, TurnoSalidaDto.class);
+                return turnoSalidaDto;
+
             }
+            //agregar mas validaciones
+
+
+
         } catch (Exception e){
             LOGGER.error("error :" + e);
         }
@@ -97,4 +110,20 @@ public class TurnoService implements ITurnoService {
         LOGGER.info("Turno Actualizado ID: " + id);
         return turnoSalidaDto;
     }
+
+    private void configureMapping() {
+        modelMapper.typeMap(TurnoEntradaDto.class, Turno.class)
+                .addMappings(modelMapper -> modelMapper.map(TurnoEntradaDto::getPaciente, Turno::setPaciente));
+
+        modelMapper.typeMap(TurnoEntradaDto.class, Turno.class)
+                .addMappings(modelMapper -> modelMapper.map(TurnoEntradaDto::getOdontologo, Turno::setOdontologo));
+
+        modelMapper.typeMap(Turno.class, TurnoSalidaDto.class)
+                .addMappings(modelMapper -> modelMapper.map(Turno::getPaciente, TurnoSalidaDto::setPaciente));
+
+        modelMapper.typeMap(Turno.class, TurnoSalidaDto.class)
+                .addMappings(modelMapper -> modelMapper.map(Turno::getOdontologo, TurnoSalidaDto::setOdontologo));
+    }
+
+
 }

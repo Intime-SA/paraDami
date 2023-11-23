@@ -1,5 +1,7 @@
-package com.backend.clinicaodontologica.dto.entrada.turno;
+package com.backend.clinicaodontologica.dto.salida.turno;
 
+import com.backend.clinicaodontologica.dto.salida.odontologo.OdontologoSalidaDto;
+import com.backend.clinicaodontologica.dto.salida.paciente.PacienteSalidaDto;
 import com.backend.clinicaodontologica.entity.Odontologo;
 import com.backend.clinicaodontologica.entity.Paciente;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -64,4 +66,5 @@ public class TurnoSalidaDto {
         this.fechaYHora = fechaYHora;
     }
 }
+
 

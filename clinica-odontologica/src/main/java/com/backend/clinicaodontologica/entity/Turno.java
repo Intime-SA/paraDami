@@ -8,15 +8,15 @@ import java.time.LocalDateTime;
 public class Turno {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalDateTime fechaYHora;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "odontologo_id")
     private Odontologo odontologo;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
@@ -30,13 +30,12 @@ public class Turno {
         this.paciente = paciente;
     }
 
+
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public LocalDateTime getFechaYHora() {
         return fechaYHora;
