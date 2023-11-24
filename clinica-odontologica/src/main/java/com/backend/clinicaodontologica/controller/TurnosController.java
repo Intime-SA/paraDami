@@ -1,5 +1,6 @@
 package com.backend.clinicaodontologica.controller;
 import com.backend.clinicaodontologica.dto.entrada.turno.TurnoEntradaDto;
+import com.backend.clinicaodontologica.dto.modificacion.TurnoModificacionEntradaDto;
 import com.backend.clinicaodontologica.dto.salida.turno.TurnoSalidaDto;
 import com.backend.clinicaodontologica.service.ITurnoService;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class TurnosController {
     }
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<TurnoSalidaDto> actualizar (@PathVariable @Valid @RequestBody Long id, TurnoEntradaDto turnoEntradaDto) {
-        return new ResponseEntity<TurnoSalidaDto>(iTurnoService.actualizarTurno(id, turnoEntradaDto), HttpStatus.OK);
+    public ResponseEntity<TurnoSalidaDto> actualizar (@PathVariable Long id, @Valid @RequestBody TurnoModificacionEntradaDto turnoModificacionEntradaDto) {
+        return new ResponseEntity<TurnoSalidaDto>(iTurnoService.actualizarTurno(turnoModificacionEntradaDto), HttpStatus.ACCEPTED);
     }
 }

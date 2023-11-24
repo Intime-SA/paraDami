@@ -2,6 +2,7 @@ package com.backend.clinicaodontologica.service.impl;
 
 import com.backend.clinicaodontologica.dto.entrada.paciente.PacienteEntradaDto;
 import com.backend.clinicaodontologica.dto.entrada.turno.TurnoEntradaDto;
+import com.backend.clinicaodontologica.dto.modificacion.TurnoModificacionEntradaDto;
 import com.backend.clinicaodontologica.dto.salida.turno.TurnoSalidaDto;
 import com.backend.clinicaodontologica.dto.modificacion.PacienteModificacionEntradaDto;
 import com.backend.clinicaodontologica.dto.salida.odontologo.OdontologoSalidaDto;
@@ -49,8 +50,8 @@ public class TurnoService implements ITurnoService {
 
         try {
             LOGGER.info("TurnoEntradaDTO: " + JsonPrinter.toString(turnoEntradaDto));
-            Long idPaciente = turnoEntradaDto.getPaciente().getId();
-            Long idOdontologo = turnoEntradaDto.getOdontologo().getId();
+            Long idPaciente = turnoEntradaDto.getPaciente();
+            Long idOdontologo = turnoEntradaDto.getOdontologo();
 
             // Cargar Paciente y Odontologo utilizando sus identificadores
 
@@ -62,8 +63,11 @@ public class TurnoService implements ITurnoService {
 
 
             if (pacienteEncontrado != null && odontologoEncontrado != null) {
-                Turno turnoEntidad = modelMapper.map(turnoEntradaDto, Turno.class);
-                Turno turnoPersistencia = turnoRepository.save(turnoEntidad);
+                Odontologo odontologoEntidad = modelMapper.map(odontologoEncontrado, Odontologo.class);
+                Paciente pacienteEntidad = modelMapper.map(pacienteEncontrado, Paciente.class);
+                Turno turnoNuevo = new Turno(turnoEntradaDto.getFechaYHora(), odontologoEntidad, pacienteEntidad);
+
+                Turno turnoPersistencia = turnoRepository.save(turnoNuevo);
                 turnoSalidaDto = modelMapper.map(turnoPersistencia, TurnoSalidaDto.class);
                 LOGGER.info("PacienteSalidaDto: " + JsonPrinter.toString(turnoSalidaDto));
 
@@ -102,12 +106,12 @@ public class TurnoService implements ITurnoService {
     }
 
     @Override
-    public TurnoSalidaDto actualizarTurno(Long id, TurnoEntradaDto turnoEntradaDto) {
-        Turno turnoEncontrado = turnoRepository.findById(id).orElse(null);
+    public TurnoSalidaDto actualizarTurno(TurnoModificacionEntradaDto turnoEntradaDto) {
+        Turno turnoEncontrado = turnoRepository.findById(turnoEntradaDto.getId()).orElse(null);
         Turno turnoNuevo = modelMapper.map(turnoEntradaDto, Turno.class);
         Turno turnoAPersistir = turnoRepository.save(turnoNuevo);
-        TurnoSalidaDto turnoSalidaDto = modelMapper.map(turnoEncontrado, TurnoSalidaDto.class);
-        LOGGER.info("Turno Actualizado ID: " + id);
+        TurnoSalidaDto turnoSalidaDto = modelMapper.map(turnoAPersistir, TurnoSalidaDto.class);
+        LOGGER.info("Turno Actualizado ID: " + turnoEncontrado.getId());
         return turnoSalidaDto;
     }
 

@@ -14,35 +14,43 @@ public class TurnoEntradaDto {
     private LocalDateTime fechaYHora;
 
     @NotNull(message = "El ID del odontologo no puede ser nulo")
-    private Odontologo odontologo;
+    private Long odontologo;
 
 
     @NotNull(message = "El ID del paciente no puede ser nulo")
-    private Paciente paciente;
+    private Long paciente;
 
 
     public TurnoEntradaDto() {
     }
 
-    public TurnoEntradaDto(LocalDateTime fechaYHora, Odontologo odontologo, Paciente paciente) {
+    public TurnoEntradaDto(LocalDateTime fechaYHora, Long odontologo, Long paciente) {
         this.fechaYHora = fechaYHora;
         this.odontologo = odontologo;
         this.paciente = paciente;
     }
 
-    public Odontologo getOdontologo() {
+    public LocalDateTime getFechaYHora() {
+        return fechaYHora;
+    }
+
+    public void setFechaYHora(LocalDateTime fechaYHora) {
+        this.fechaYHora = fechaYHora;
+    }
+
+    public Long getOdontologo() {
         return odontologo;
     }
 
-    public void setOdontologo(Odontologo odontologo) {
+    public void setOdontologo(Long odontologo) {
         this.odontologo = odontologo;
     }
 
-    public Paciente getPaciente() {
+    public Long getPaciente() {
         return paciente;
     }
 
-    public void setPaciente(Paciente paciente) {
+    public void setPaciente(Long paciente) {
         this.paciente = paciente;
     }
 }
