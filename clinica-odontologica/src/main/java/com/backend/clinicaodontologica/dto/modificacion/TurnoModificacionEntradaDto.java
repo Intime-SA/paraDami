@@ -27,6 +27,10 @@ public class TurnoModificacionEntradaDto {
         this.paciente = paciente;
     }
 
+    public TurnoModificacionEntradaDto(LocalDateTime of, long l, int i) { //Agregue esto y me funcionó el test
+
+    }
+
     public LocalDateTime getFechaYhora() {
         return fechaYhora;
     }
