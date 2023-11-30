@@ -4,6 +4,7 @@ package com.backend.clinicaodontologica.service.impl;
 import com.backend.clinicaodontologica.dto.entrada.odontologo.OdontologoEntradaDto;
 import com.backend.clinicaodontologica.dto.modificacion.OdontologoModificacionEntradaDto;
 import com.backend.clinicaodontologica.dto.salida.odontologo.OdontologoSalidaDto;
+import com.backend.clinicaodontologica.dto.salida.paciente.PacienteSalidaDto;
 import com.backend.clinicaodontologica.entity.Odontologo;
 import com.backend.clinicaodontologica.repository.OdontologoRepository;
 import com.backend.clinicaodontologica.service.IOdontologoService;
@@ -57,15 +58,35 @@ public class OdontologoService implements IOdontologoService {
         odontologo = modelMapper.map(odontologoEntidad, OdontologoSalidaDto.class);
         return odontologo;
     }
+    
 
     @Override
     public void eliminarOdontologo(Long id) {
+        if (odontologoRepository.findById(id).orElse(null) != null) {
+            odontologoRepository.deleteById(id);
+            LOGGER.warn("Se ha eliminado el odontologo con id: {}", id);
+        } else {
+            LOGGER.error("No se ha encontrado el odontologo con id {}", id);
+            //excepcion a lanzar aqui
+        }
 
     }
 
     @Override
     public OdontologoSalidaDto actualizarOdontologo(OdontologoModificacionEntradaDto odontologoModificacionEntradaDto) {
-        return null;
+
+        OdontologoSalidaDto odontologoSalidaDto = null;
+        Odontologo odontologo = modelMapper.map(odontologoModificacionEntradaDto, Odontologo.class);
+        Odontologo odontologoEncontrado = odontologoRepository.findById(odontologo.getId()).orElse(null);
+        if (odontologoEncontrado != null) {
+            odontologoEncontrado = odontologo;
+            odontologoRepository.save(odontologoEncontrado);
+            odontologoSalidaDto = modelMapper.map(odontologo, OdontologoSalidaDto.class);
+            LOGGER.info("Odontologo Actualizado ID: " + odontologoEncontrado.getId());
+            return odontologoSalidaDto;
+        }
+        else return odontologoSalidaDto;
     }
+
 
 }

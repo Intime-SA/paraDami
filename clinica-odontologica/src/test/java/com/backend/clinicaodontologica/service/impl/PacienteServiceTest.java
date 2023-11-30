@@ -4,7 +4,8 @@ import com.backend.clinicaodontologica.dto.entrada.paciente.DomicilioEntradaDto;
 import com.backend.clinicaodontologica.dto.entrada.paciente.PacienteEntradaDto;
 import com.backend.clinicaodontologica.dto.salida.paciente.PacienteSalidaDto;
 import com.backend.clinicaodontologica.entity.Paciente;
-import com.backend.clinicaodontologica.exceptions.ResouceNotFoundExcepcion;
+import com.backend.clinicaodontologica.exceptions.ResourceNotFoundException;
+import com.backend.clinicaodontologica.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ class PacienteServiceTest {
             e.printStackTrace();
         }
 
-        assertThrows(ResouceNotFoundExcepcion.class, () -> pacienteService.eliminarPaciente(1L));
+        assertThrows(ResourceNotFoundException.class, () -> pacienteService.eliminarPaciente(1L));
 
     }
 
@@ -53,7 +54,5 @@ class PacienteServiceTest {
         List<PacienteSalidaDto> pacienteSalidaDtoList = pacienteService.listarPacientes();
         assertTrue(pacienteSalidaDtoList.isEmpty());
     }
-
-    ;
 }
 

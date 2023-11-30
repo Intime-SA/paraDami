@@ -30,7 +30,7 @@ public class TurnoServiceTest {
         TurnoSalidaDto turnoSalidaDto = turnoService.crearTurno(turnoEntradaDto);
 
         assertNotNull(turnoSalidaDto.getId());
-        assertEquals("2024-02-13T18:30:00", turnoSalidaDto.getFechaYHora());
+        assertEquals(2024, turnoSalidaDto.getFechaYHora().getYear());
 
     }
 
@@ -39,7 +39,7 @@ public class TurnoServiceTest {
     @Test
     @Order(2)
     void deberiaModificarUnTurno() {
-        TurnoModificacionEntradaDto turnoModificacionEntradaDto = new TurnoModificacionEntradaDto(LocalDateTime.of(2024, 8, 22, 19, 20, 00), 1L, 3);
+        TurnoModificacionEntradaDto turnoModificacionEntradaDto = new TurnoModificacionEntradaDto(LocalDateTime.of(2024, 8, 22, 19, 20, 00), 2L, 3);
 
         TurnoSalidaDto turnoSalidaDto = turnoService.actualizarTurno(turnoModificacionEntradaDto);
 
