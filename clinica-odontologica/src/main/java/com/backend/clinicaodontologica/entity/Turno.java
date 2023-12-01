@@ -63,6 +63,6 @@ public class Turno {
 
     @Override
     public String toString(){
-        return ("Turno id :" + this.getId() + " \n Pacientes: " + this.getPaciente() + " \n Odontologo :" + this.getOdontologo());
+        return ("Turno id :" + this.getId() + " \n Pacientes: " + this.getPaciente() + " \n Odontologo :" + this.getOdontologo() + " \n Fecha y Hora :" + this.getFechaYHora());
     }
 }

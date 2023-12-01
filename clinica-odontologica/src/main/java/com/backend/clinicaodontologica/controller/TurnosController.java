@@ -40,8 +40,8 @@ public class TurnosController {
         return "Eliminado con exito. IDENTIFICACION " + id;
     }
 
-    @PutMapping("/actualizar/{id}")
-    public ResponseEntity<TurnoSalidaDto> actualizar(@PathVariable Long id, @Valid @RequestBody TurnoModificacionEntradaDto turnoModificacionEntradaDto) {
+    @PutMapping("/actualizar")
+    public ResponseEntity<TurnoSalidaDto> actualizar(@Valid @RequestBody TurnoModificacionEntradaDto turnoModificacionEntradaDto) {
         return new ResponseEntity<TurnoSalidaDto>(iTurnoService.actualizarTurno(turnoModificacionEntradaDto), HttpStatus.ACCEPTED);
     }
 

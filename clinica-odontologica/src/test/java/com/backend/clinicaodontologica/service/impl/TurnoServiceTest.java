@@ -5,6 +5,9 @@ import com.backend.clinicaodontologica.dto.entrada.odontologo.OdontologoEntradaD
 import com.backend.clinicaodontologica.dto.entrada.paciente.DomicilioEntradaDto;
 import com.backend.clinicaodontologica.dto.entrada.paciente.PacienteEntradaDto;
 import com.backend.clinicaodontologica.dto.entrada.turno.TurnoEntradaDto;
+import com.backend.clinicaodontologica.dto.modificacion.OdontologoModificacionEntradaDto;
+import com.backend.clinicaodontologica.dto.modificacion.PacienteModificacionEntradaDto;
+import com.backend.clinicaodontologica.dto.modificacion.TurnoModificacionEntradaDto;
 import com.backend.clinicaodontologica.dto.salida.odontologo.OdontologoSalidaDto;
 import com.backend.clinicaodontologica.dto.salida.paciente.PacienteSalidaDto;
 import com.backend.clinicaodontologica.dto.salida.turno.TurnoSalidaDto;
@@ -38,47 +41,37 @@ public class TurnoServiceTest {
 
     private final Logger LOGGER = LoggerFactory.getLogger(TurnoService.class);
 
-//    @Test
-//    @Order(1)
-//    void DeberiaRegistrarUnTurno_DevolverDatosDePacienteYOdontologo() {
-//        OdontologoSalidaDto odontologo;
-//        odontologo = odontologoService.registrarOdontologo(new OdontologoEntradaDto("ASD1234567", "Rama", "Piola"));
-//        PacienteSalidaDto paciente = pacienteService.registrarPaciente(new PacienteEntradaDto("Ramiro", "Arce", 39349791, LocalDate.of(1995, 12, 07), new DomicilioEntradaDto("Mendoza", 2070, "Mar del Plata", "Buenos Aires")));
-//        LOGGER.info("odontologo " + odontologo);
-//        LOGGER.info("paciente " + paciente);
-//
-//        LocalDateTime fechaYHoraEsperada = LocalDateTime.of(2024, 02, 13, 18, 30, 30);
-//
-//        LOGGER.info("FECHA ESPERADA = " + fechaYHoraEsperada);
-//
-//        TurnoEntradaDto turnoEntradaDto = new TurnoEntradaDto(fechaYHoraEsperada, 1L, 2L);
-//
-//        TurnoSalidaDto turnoSalidaDto = turnoService.crearTurno(turnoEntradaDto);
-//
-//        LOGGER.info("TURNO CREADO POR TEST = " + turnoSalidaDto);
-//
-//        assertNotNull(turnoSalidaDto);
-//        assertEquals("ASD1234567", turnoSalidaDto.getOdontologo().getMatricula());
-//        assertEquals("Ramiro", turnoSalidaDto.getPaciente().getNombre());
-//    };
+    @Test
+    @Order(1)
+    void DeberiaRegistrarUnTurno_DevolverDatosDePacienteYOdontologo() {
+        OdontologoSalidaDto odontologo;
+        odontologo = odontologoService.registrarOdontologo(new OdontologoEntradaDto("ASD1234567", "Rama", "Piola"));
+        PacienteSalidaDto paciente = pacienteService.registrarPaciente(new PacienteEntradaDto("Ramiro", "Arce", 39349791, LocalDate.of(1995, 12, 07), new DomicilioEntradaDto("Mendoza", 2070, "Mar del Plata", "Buenos Aires")));
+        LOGGER.info("odontologo " + odontologo);
+        LOGGER.info("paciente " + paciente);
 
-//    @Test
-//    @Order(2)
-//    void deberiaModificarUnTurno() {
-//        TurnoModificacionEntradaDto turnoModificacionEntradaDto = new TurnoModificacionEntradaDto(LocalDateTime.of(2024, 8, 22, 19, 20, 00), 1L, 3);
-//
-//        TurnoSalidaDto turnoSalidaDto = turnoService.actualizarTurno(turnoModificacionEntradaDto);
-//
-//        assertNotNull(turnoSalidaDto.getId());
-//        assertEquals("2024-8-22T19:20:00", turnoSalidaDto.getFechaYHora());
-//    }
+        LocalDateTime fechaYHoraEsperada = LocalDateTime.of(2024, 02, 13, 18, 30, 30);
+
+        LOGGER.info("FECHA ESPERADA = " + fechaYHoraEsperada);
+
+        TurnoEntradaDto turnoEntradaDto = new TurnoEntradaDto(fechaYHoraEsperada, 1L, 2L);
+
+        TurnoSalidaDto turnoSalidaDto = turnoService.crearTurno(turnoEntradaDto);
+
+        LOGGER.info("TURNO CREADO POR TEST = " + turnoSalidaDto);
+
+        assertNotNull(turnoSalidaDto);
+        assertEquals("ASD1234567", turnoSalidaDto.getOdontologo().getMatricula());
+        assertEquals("Ramiro", turnoSalidaDto.getPaciente().getNombre());
+    };
 
     @Test
-    @Order(3)
-    public void deberiaEliminarUnTurno() {
+    @Order(2)
+    public void deberiaActualizarTurnoExistente() {
         // Registrar odontólogo y paciente
         OdontologoSalidaDto odontologo = odontologoService.registrarOdontologo(new OdontologoEntradaDto("ASD1234567", "Rama", "Piola"));
         PacienteSalidaDto paciente = pacienteService.registrarPaciente(new PacienteEntradaDto("Ramiro", "Arce", 39349791, LocalDate.of(1995, 12, 07), new DomicilioEntradaDto("Mendoza", 2070, "Mar del Plata", "Buenos Aires")));
+
         LOGGER.info("Odontólogo: " + odontologo);
         LOGGER.info("Paciente: " + paciente);
 
@@ -88,23 +81,47 @@ public class TurnoServiceTest {
 
         TurnoEntradaDto turnoEntradaDto = new TurnoEntradaDto(fechaYHoraEsperada, 1L, 2L);
         TurnoSalidaDto turnoSalidaDto = turnoService.crearTurno(turnoEntradaDto);
-        LOGGER.info("ID del turno creado para probar TEST número 3 = " + turnoSalidaDto.getId());
 
-        List<TurnoSalidaDto> turnoSalidaDtoList = turnoService.turnoSalidaDtos();
-        // Intentar eliminar un turno con un ID correcto
+        // Modificar turno
+        LocalDateTime fechaYHoraEsperada2 = LocalDateTime.of(2025, 02, 13, 18, 30, 30);
+        LOGGER.info("Nueva Fecha y Hora Esperada: " + fechaYHoraEsperada2);
+
+        TurnoModificacionEntradaDto turnoEntradaDtoMod = new TurnoModificacionEntradaDto(
+                1L,
+                new PacienteModificacionEntradaDto(2L,"Ramiro", "Martin", 39349791, LocalDate.of(1995, 12, 07), new DomicilioEntradaDto("Mendoza", 2070, "Buenos Aires", "Mar del Plata")),
+                new OdontologoModificacionEntradaDto(1L, "ASD1234567", "Rodrigo", "Miguelez"),
+                fechaYHoraEsperada2
+        );
+        // Actualizar turno
+        TurnoSalidaDto turnoSalidaDtoActualizado = turnoService.actualizarTurno(turnoEntradaDtoMod);
+        LOGGER.info("Turno actualizado DTO = " + turnoSalidaDtoActualizado);
+
+        // Verificar la actualización
+        assertNotNull(turnoSalidaDtoActualizado);
+        assertEquals(fechaYHoraEsperada2, turnoSalidaDtoActualizado.getFechaYHora());
+        assertEquals("Rodrigo", turnoSalidaDtoActualizado.getOdontologo().getNombre());
+        assertEquals("Martin", turnoSalidaDtoActualizado.getPaciente().getApellido());
+
+    }
+
+
+    @Test
+    @Order(3)
+    public void deberiaEliminarUnTurno() {
+
+
+
+
         try {
-            turnoService.eliminarTurno(turnoSalidaDto.getId());
-            assertEquals(0, turnoSalidaDtoList.size(), "Deberia tener 0");
+            turnoService.eliminarTurno(1L);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
 
 
 
+        List<TurnoSalidaDto> turnosDespuesDeEliminar = turnoService.turnoSalidaDtos();
+        LOGGER.info("Turnos despues de eliminar =" + turnosDespuesDeEliminar);
+        assertEquals(0, turnosDespuesDeEliminar.size(), "El tamaño de la lista debería ser menor después de eliminar un turno");
     }
-
-
-
-
-
 }
