@@ -3,14 +3,12 @@ package com.backend.clinicaodontologica.service.impl;
 import com.backend.clinicaodontologica.dto.entrada.paciente.DomicilioEntradaDto;
 import com.backend.clinicaodontologica.dto.entrada.paciente.PacienteEntradaDto;
 import com.backend.clinicaodontologica.dto.salida.paciente.PacienteSalidaDto;
-import com.backend.clinicaodontologica.entity.Paciente;
-import com.backend.clinicaodontologica.exceptions.ResouceNotFoundExcepcion;
+import com.backend.clinicaodontologica.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.validation.constraints.AssertFalse;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,7 +24,7 @@ class PacienteServiceTest {
 
      @Test
      @Order(1)
-    void siElNombreLlegaVacio_noDeberiaRegistrarAlPaciente(){
+    void SiElPacienteSeRegistroOk_DeberiaDevolverNombre(){
          PacienteEntradaDto pacienteEntradaDto = new PacienteEntradaDto("Juan", "Pablo", 39349791, LocalDate.of(2023, 11, 30), new DomicilioEntradaDto("Mendoza", 2070, "Mar del Plata", "Buenos Aires"));
 
          PacienteSalidaDto pacienteSalidaDto = pacienteService.registrarPaciente(pacienteEntradaDto);
@@ -35,8 +33,7 @@ class PacienteServiceTest {
      }
 
      @Test
-     @Order(2
-     )
+     @Order(2)
      void siElPacienteConId1FueEliminado(){
          try {
              pacienteService.eliminarPaciente(1L);
@@ -45,7 +42,7 @@ class PacienteServiceTest {
              e.printStackTrace();
          }
 
-         assertThrows(ResouceNotFoundExcepcion.class, () -> pacienteService.eliminarPaciente(1L));
+         assertThrows(ResourceNotFoundException.class, () -> pacienteService.eliminarPaciente(1L));
 
      }
 

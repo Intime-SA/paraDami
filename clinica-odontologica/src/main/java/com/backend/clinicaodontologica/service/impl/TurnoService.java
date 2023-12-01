@@ -10,6 +10,7 @@ import com.backend.clinicaodontologica.dto.salida.paciente.PacienteSalidaDto;
 import com.backend.clinicaodontologica.entity.Odontologo;
 import com.backend.clinicaodontologica.entity.Paciente;
 import com.backend.clinicaodontologica.entity.Turno;
+import com.backend.clinicaodontologica.exceptions.ResourceNotFoundException;
 import com.backend.clinicaodontologica.repository.OdontologoRepository;
 import com.backend.clinicaodontologica.repository.PacienteRepository;
 import com.backend.clinicaodontologica.repository.TurnoRepository;
@@ -95,14 +96,18 @@ public class TurnoService implements ITurnoService {
     }
 
     @Override
-    public String eliminarTurno(Long id) {
+    public String eliminarTurno(Long id) throws ResourceNotFoundException {
+        try {
         String turnoEliminado = null;
         LOGGER.info("ID localizado para eliminar. ID: " + id);
         Turno turnoAEliminar = turnoRepository.findById(id).orElse(null);
         turnoRepository.delete(turnoAEliminar);
         LOGGER.info("El turno con ID: " + id + " ha sido eliminado con exito. Fecha de Turno: " + turnoAEliminar.getFechaYHora() + " " + turnoAEliminar.getOdontologo() + " " + turnoAEliminar.getPaciente());
         turnoEliminado = modelMapper.map(id, String.class);
-        return turnoEliminado;
+        return turnoEliminado;}
+        catch (Exception e) {
+            throw new ResourceNotFoundException("No se localiza ID para eliminar turno");
+        }
     }
 
     @Override
@@ -121,6 +126,13 @@ public class TurnoService implements ITurnoService {
         else return turnoSalidaDto;
     }
 
+    @Override
+    public TurnoSalidaDto buscarTurnoPorId(Long id) {
+        Turno turnoBuscado = turnoRepository.findById(id).orElse(null);
+        TurnoSalidaDto turnoSalidaDto = modelMapper.map(turnoBuscado, TurnoSalidaDto.class);
+        return turnoSalidaDto;
+    }
+
     private void configureMapping() {
         modelMapper.typeMap(TurnoEntradaDto.class, Turno.class)
                 .addMappings(modelMapper -> modelMapper.map(TurnoEntradaDto::getPaciente, Turno::setPaciente));
@@ -137,6 +149,9 @@ public class TurnoService implements ITurnoService {
                 .addMappings(modelMapper -> modelMapper.map(TurnoModificacionEntradaDto::getPaciente, Turno::setPaciente));
         modelMapper.typeMap(TurnoModificacionEntradaDto.class, Turno.class)
                 .addMappings(modelMapper -> modelMapper.map(TurnoModificacionEntradaDto::getOdontologo, Turno::setOdontologo));
+
+        modelMapper.typeMap(Odontologo.class, OdontologoSalidaDto.class)
+                .addMappings(mapper -> mapper.map(Odontologo::getId, OdontologoSalidaDto::setId));
     }
 
 

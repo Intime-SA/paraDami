@@ -6,7 +6,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class OdontologoEntradaDto {
 
     @NotNull(message = "La matricula del odontólogo no puede ser nula")
